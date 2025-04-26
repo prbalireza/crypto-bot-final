@@ -5,11 +5,13 @@ import ccxt
 import ta
 from config import BINANCE_API_KEY, BINANCE_SECRET_KEY
 
-def fetch_ohlcv(symbol='BTC/USDT', timeframe='1h', limit=100):
-    exchange = ccxt.binance({
-        'apiKey': BINANCE_API_KEY,
-        'secret': BINANCE_SECRET_KEY,
-        'enableRateLimit': True,
+def simple_analysis(symbol='bitcoin'):
+    price = get_coincap_price(symbol)
+    # اینجا می‌تونی تحلیل ساده روی قیمت انجام بدی، مثل بررسی بالا/پایین بودن قیمت
+    if price > 50000:
+        return f'{symbol} قیمت بالاست: {price}'
+    else:
+        return f'{symbol} قیمت پایین‌تره: {price}'
     })
     ohlcv = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
     df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
