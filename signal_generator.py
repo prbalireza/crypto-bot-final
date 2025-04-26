@@ -1,30 +1,23 @@
 # signal_generator.py
 
-from technical_analysis import fetch_ohlcv, calculate_indicators
+from technical_analysis import simple_analysis
 from fundamental_analysis import analyze_fundamentals
+from data_fetcher import get_coincap_price
 
-def generate_signal(symbol='BTC/USDT'):
-    df = fetch_ohlcv(symbol)
-    df = calculate_indicators(df)
-    latest = df.iloc[-1]
-
+def generate_signal(symbol='bitcoin'):
+    price = get_coincap_price(symbol)
     fundamentals = analyze_fundamentals()
 
-    if (latest['rsi'] < 30 and latest['macd'] > 0 and latest['close'] > latest['ema50']
-        and fundamentals['sentiment_score'] > 0
-        and latest['fib_0.5'] < latest['close'] < latest['fib_0.382']):
-        
-        market_type = 'FUTURES' if latest['adx'] > 25 else 'SPOT'
-        leverage = '10x' if market_type == 'FUTURES' else 'None'
-
+    # تحلیل ساده: فقط بررسی قیمت + فاندامنتال
+    if price < 30000 and fundamentals['sentiment_score'] > 0:
         return {
-            'market': market_type,
-            'symbol': symbol,
+            'market': 'SPOT',
+            'symbol': symbol.upper(),
             'action': 'BUY',
-            'entry': latest['close'],
-            'targets': [latest['close'] * 1.02, latest['close'] * 1.04],
-            'stop_loss': latest['close'] * 0.98,
-            'leverage': leverage
+            'entry': price,
+            'targets': [price * 1.02, price * 1.04],
+            'stop_loss': price * 0.98,
+            'leverage': 'None'
         }
     else:
         return None
