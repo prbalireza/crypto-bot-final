@@ -1,3 +1,9 @@
+# signal_generator.py
+
+from technical_analysis import simple_analysis
+from fundamental_analysis import analyze_fundamentals
+from data_fetcher import get_coincap_price
+
 def generate_signal(symbol='bitcoin'):
     price = get_coincap_price(symbol)
     fundamentals = analyze_fundamentals()
