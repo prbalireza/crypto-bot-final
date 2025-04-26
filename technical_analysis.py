@@ -12,7 +12,7 @@ def simple_analysis(symbol='bitcoin'):
         return f'{symbol} قیمت بالاست: {price}'
     else:
         return f'{symbol} قیمت پایین‌تره: {price}'
-    })
+    
     ohlcv = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
     df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
