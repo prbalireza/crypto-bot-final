@@ -1,17 +1,17 @@
 # data_fetcher.py
 
+import ccxt
 import requests
-from config import COINMARKETCAP_API_KEY, CRYPTOCOMPARE_API_KEY, CRYPTOPANIC_API_KEY
+from config import BINANCE_API_KEY, BINANCE_SECRET_KEY, COINMARKETCAP_API_KEY, CRYPTOCOMPARE_API_KEY, CRYPTOPANIC_API_KEY
 
-def get_coincap_price(symbol='bitcoin'):
-    url = f'https://api.coincap.io/v2/assets/{symbol.lower()}'
-    response = requests.get(url)
-    data = response.json()
-    if 'data' in data and 'priceUsd' in data['data']:
-        price = float(data['data']['priceUsd'])
-        return price
-    else:
-        return None
+def fetch_ohlcv(symbol='BTC/USDT', timeframe='1h', limit=100):
+    exchange = ccxt.binance({
+        'apiKey': BINANCE_API_KEY,
+        'secret': BINANCE_SECRET_KEY,
+        'enableRateLimit': True,
+    })
+    ohlcv = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
+    return ohlcv
 
 def get_trending_coins():
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
@@ -19,9 +19,8 @@ def get_trending_coins():
     response = requests.get(url, headers=headers)
     data = response.json()
     if 'data' in data:
-        return [coin['name'] for coin in data['data'][:10]]  # فقط ۱۰ کوین اول بازار
+        return [coin['symbol'] + '/USDT' for coin in data['data'][:10]]
     else:
-        print("خطا در دریافت داده از CoinMarketCap:", data)
         return []
 
 def get_market_sentiment():
