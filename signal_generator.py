@@ -8,8 +8,7 @@ def generate_signal(symbol='bitcoin'):
     price = get_coincap_price(symbol)
     fundamentals = analyze_fundamentals()
 
-    # تحلیل ساده: فقط بررسی قیمت + فاندامنتال
-    if price < 30000 and fundamentals['sentiment_score'] > 0:
+    if price is not None and fundamentals['sentiment_score'] > 0 and price < 30000:
         return {
             'market': 'SPOT',
             'symbol': symbol.upper(),
