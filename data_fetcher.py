@@ -11,14 +11,18 @@ def get_coincap_price(symbol='bitcoin'):
         price = float(data['data']['priceUsd'])
         return price
     else:
-        return None  # Handle missing data
+        return None
 
 def get_trending_coins():
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/trending/latest'
     headers = {'X-CMC_PRO_API_KEY': COINMARKETCAP_API_KEY}
     response = requests.get(url, headers=headers)
     data = response.json()
-    return [coin['name'] for coin in data['data']]
+    if 'data' in data:
+        return [coin['name'] for coin in data['data']]
+    else:
+        print("خطا در دریافت داده از CoinMarketCap:", data)
+        return []
 
 def get_market_sentiment():
     url = f'https://min-api.cryptocompare.com/data/social/coin/latest?api_key={CRYPTOCOMPARE_API_KEY}&fsym=BTC'
