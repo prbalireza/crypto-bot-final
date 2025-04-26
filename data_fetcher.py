@@ -14,12 +14,12 @@ def get_coincap_price(symbol='bitcoin'):
         return None
 
 def get_trending_coins():
-    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/trending/latest'
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
     headers = {'X-CMC_PRO_API_KEY': COINMARKETCAP_API_KEY}
     response = requests.get(url, headers=headers)
     data = response.json()
     if 'data' in data:
-        return [coin['name'] for coin in data['data']]
+        return [coin['name'] for coin in data['data'][:10]]  # فقط ۱۰ کوین اول بازار
     else:
         print("خطا در دریافت داده از CoinMarketCap:", data)
         return []
